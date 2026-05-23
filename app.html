@@ -69,9 +69,6 @@
         .btn-send { background: #0284c7; border: none; padding: 0 15px; border-radius: 6px; color: white; font-weight: 600; cursor: pointer; font-size: 12px; }
         @keyframes spin { 100% { transform: rotate(360deg); } }
     </style>
-<canvas id="three-canvas"></canvas>
-<div class="canvas-container">
-</div>
 
 
     <div class="sidebar">
@@ -132,21 +129,46 @@
         }
 
         function sendMessage() {
-            const input = document.getElementById('userInput');
-            if(input.value.trim() !== "") {
-                log.innerHTML += `<br><br><span style="color: #38bdf8;"><strong>Admin:</strong> ${input.value}</span>`;
-                setTimeout(() => {
-                    if (loadedAssets.length === 0) {
-                        log.innerHTML += `<br><br><strong>Gemini Core:</strong> Staging prompt received. Tap 'Browse Files' inside the Vault to link media assets for synthesis.`;
-                    } else {
-                        log.innerHTML += `<br><br><strong>Gemini Core:</strong> Processing assets (${loadedAssets.length} loaded) matching layout request. Ready to push to serverless API pipeline.`;
-                    }
-                    log.scrollTop = log.scrollHeight;
-                }, 800);
-                input.value = "";
-                log.scrollTop = log.scrollHeight;
-            }
-        }
+    const input = document.getElementById('userInput');
+    const promptText = input.value.trim();
+    if (promptText === "") return;
+
+    // 1. Display your message in the chat panel
+    log.innerHTML += `<br><br><span style="color: #38bdf8;"><strong>User:</strong> ${promptText}</span>`;
+    input.value = "";
+    log.scrollTop = log.scrollHeight;
+
+    // 2. Clear out any old 3D code running on the canvas
+    const oldCanvas = document.getElementById('three-canvas');
+    const container = oldCanvas.parentElement;
+    const newCanvas = document.createElement('canvas');
+    newCanvas.id = 'three-canvas';
+    oldCanvas.remove();
+    container.insertBefore(newCanvas, container.firstChild);
+
+    // 3. Make the background live call to our API route
+    log.innerHTML += `<br><br><strong>Gemini Core:</strong> <span style="color: #a4de80;">Generating 3D assets...</span>`;
+    
+    fetch('/api/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt: promptText })
+    })
+    .then(res => res.json())
+    .then(data => {
+        // 4. Inject the fresh 3D Three.js script straight into the page context
+        const scriptElement = document.createElement('script');
+        scriptElement.text = data.code;
+        document.body.appendChild(scriptElement);
+        
+        log.innerHTML += `<br><br><strong>Gemini Core:</strong> Workspace compilation successful. 3D engine updated.`;
+        log.scrollTop = log.scrollHeight;
+    })
+    .catch(err => {
+        log.innerHTML += `<br><br><span style="color: #f87171;"><strong>Error:</strong> Failed to compile engine context.</span>`;
+    });
+}
+
     </script>
 
 </body>
