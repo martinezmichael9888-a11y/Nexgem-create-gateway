@@ -10,27 +10,27 @@
             background: #0f172a;
             color: #f8fafc;
             margin: 0;
-            padding: 20px;
-            display: grid;
-            grid-template-columns: 300px 1fr;
-            gap: 20px;
-            height: calc(100vh - 40px);
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            min-height: 100vh;
+            box-sizing: border-box;
         }
-        /* Sidebar Panel - NexGem Guard & Vault */
-        .sidebar {
+        
+        /* Optimized Panels for Small Screens */
+        .sidebar, .canvas-container, .ai-chat-peer {
             background: rgba(30, 41, 59, 0.5);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 12px;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
+            padding: 15px;
+            box-sizing: border-box;
+            width: 100%;
         }
-        .panel-title { font-size: 16px; font-weight: 600; color: #38bdf8; text-transform: uppercase; letter-spacing: 0.05em; }
         
-        /* Interactive Drag & Drop Vault Zone */
+        .panel-title { font-size: 14px; font-weight: 600; color: #38bdf8; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 10px; }
+        
         .vault-zone {
-            flex-grow: 1;
             background: #0f172a;
             border: 2px dashed rgba(56, 189, 248, 0.3);
             border-radius: 8px;
@@ -39,65 +39,33 @@
             justify-content: center;
             align-items: center;
             text-align: center;
-            padding: 20px;
-            font-size: 13px;
-            color: #64748b;
-            transition: all 0.3s ease;
-        }
-        .vault-zone.dragover {
-            background: rgba(56, 189, 248, 0.1);
-            border-color: #38bdf8;
-            color: #f8fafc;
-        }
-        .file-list {
-            margin-top: 10px;
+            padding: 15px;
             font-size: 12px;
-            color: #4ade80;
-            text-align: left;
-            width: 100%;
-            max-height: 150px;
-            overflow-y: auto;
+            color: #64748b;
         }
 
-        /* Main Viewport - OmniVision Suite */
-        .main-content {
-            display: grid;
-            grid-template-rows: 1fr 220px;
-            gap: 20px;
-        }
         .canvas-container {
-            background: rgba(30, 41, 59, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            position: relative;
             display: flex;
             justify-content: center;
             align-items: center;
+            position: relative;
+            height: 220px;
             overflow: hidden;
         }
+        
         .sphere-axis {
-            width: 250px;
-            height: 250px;
+            width: 140px;
+            height: 140px;
             border-radius: 50%;
             background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.2), rgba(0,0,0,0.6)), linear-gradient(45deg, #0284c7, #ec4899);
-            box-shadow: 0 0 40px rgba(2, 132, 199, 0.4);
+            box-shadow: 0 0 30px rgba(2, 132, 199, 0.4);
             animation: spin 8s linear infinite;
         }
 
-        /* AI Live Peer Chat Box */
-        .ai-chat-peer {
-            background: rgba(30, 41, 59, 0.5);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            padding: 15px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        .chat-log { flex-grow: 1; background: #0f172a; border-radius: 6px; padding: 10px; font-size: 13px; color: #cbd5e1; overflow-y: auto; }
-        .input-row { display: flex; gap: 10px; }
-        .input-row input { flex-grow: 1; background: #0f172a; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; padding: 10px; color: white; }
-        .btn-send { background: #0284c7; border: none; padding: 0 20px; border-radius: 6px; color: white; font-weight: 600; cursor: pointer; }
+        .chat-log { height: 120px; background: #0f172a; border-radius: 6px; padding: 10px; font-size: 12px; color: #cbd5e1; overflow-y: auto; margin-bottom: 10px; }
+        .input-row { display: flex; gap: 8px; }
+        .input-row input { flex-grow: 1; background: #0f172a; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; padding: 8px; color: white; font-size: 12px; min-width: 0; }
+        .btn-send { background: #0284c7; border: none; padding: 0 15px; border-radius: 6px; color: white; font-weight: 600; cursor: pointer; font-size: 12px; }
         @keyframes spin { 100% { transform: rotate(360deg); } }
     </style>
 </head>
@@ -106,252 +74,72 @@
     <div class="sidebar">
         <div class="panel-title">🛡️ User Asset Vault</div>
         <div class="vault-zone" id="dropZone">
-            <span id="vaultPrompt">Drop media files here to ground the Gemini Engine.<br><br>(Videos, Audio, or Photos)</span>
-            <div class="file-list" id="fileList"></div>
+            <span id="vaultPrompt">Tap to stage or drop media files here.<br>(Videos, Audio, or Photos)</span>
+            <input type="file" id="fileSelector" multiple style="display: none;">
+            <div style="margin-top: 8px; font-size: 11px; color: #38bdf8; text-decoration: underline; cursor: pointer;" onclick="document.getElementById('fileSelector').click()">Browse Files</div>
+            <div id="fileList" style="margin-top: 8px; font-size: 11px; color: #4ade80;"></div>
         </div>
-        <div class="panel-title">💰 Admin Ledger</div>
-        <div style="font-size: 20px; font-weight: bold; color: #4ade80;">$0.00 USD</div>
-        <div style="font-size: 11px; color: #94a3b8;">50/50 Liquidation Split Active</div>
-    </div>
-
-    <div class="main-content">
-        <div class="canvas-container">
-            <div class="sphere-axis"></div>
-            <div style="position: absolute; bottom: 20px; left: 20px; font-size: 12px; color: #94a3b8; background: rgba(0,0,0,0.5); padding: 5px 10px; border-radius: 4px;">
-                OmniVision Real-Time Engine Active
+        
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
+            <div>
+                <div class="panel-title" style="margin:0;">💰 Admin Ledger</div>
+                <div style="font-size: 11px; color: #94a3b8;">50/50 Split Active</div>
             </div>
-        </div>
-
-        <div class="ai-chat-peer">
-            <div class="panel-title">🗣️ Gemini AI Chat Advisor (Discussion Mode)</div>
-            <div class="chat-log" id="chatLog">
-                <strong>Gemini Core:</strong> Session validated under Tier 0 Admin Rights. Your workspace is grounded by your files. Speak what you imagine into existence below...
-            </div>
-            <div class="input-row">
-                <input type="text" id="userInput" placeholder="Describe the video edit or 3D graphic layout you want to render...">
-                <button class="btn-send" onclick="sendMessage()">Send</button>
-            </div>
+            <div style="font-size: 18px; font-weight: bold; color: #4ade80;">$0.00 USD</div>
         </div>
     </div>
 
-    <script>
-        // Store uploaded assets in application memory
-        let loadedAssets = [];
-
-        const dropZone = document.getElementById('dropZone');
-        const fileList = document.getElementById('fileList');
-        const vaultPrompt = document.getElementById('vaultPrompt');
-        const log = document.getElementById('chatLog');
-
-        // Drag and Drop Event Logic
-        ['dragenter', 'dragover'].forEach(eventName => {
-            dropZone.addEventListener(eventName, (e) => {
-                e.preventDefault();
-                dropZone.classList.add('dragover');
-            }, false);
-        });
-
-        ['dragleave', 'drop'].forEach(eventName => {
-            dropZone.addEventListener(eventName, (e) => {
-                e.preventDefault();
-                dropZone.classList.remove('dragover');
-            }, false);
-        });
-
-        dropZone.addEventListener('drop', (e) => {
-            const dt = e.dataTransfer;
-            const files = dt.files;
-
-            for (let i = 0; i < files.length; i++) {
-                loadedAssets.push(files[i].name);
-                fileList.innerHTML += `<div>📄 ${files[i].name} (Staged)</div>`;
-            }
-            vaultPrompt.innerHTML = `<strong>Assets Locked in Vault:</strong>`;
-            
-            log.innerHTML += `<br><br><span style="color: #4ade80;"><strong>System Guard:</strong> ${files.length} file(s) safely isolated into asset memory. Gemini AI Engine context updated.</span>`;
-            log.scrollTop = log.scrollHeight;
-        });
-
-        // Dynamic Chat System Logic
-        function sendMessage() {
-            const input = document.getElementById('userInput');
-            if(input.value.trim() !== "") {
-                const userText = input.value;
-                log.innerHTML += `<br><br><span style="color: #38bdf8;"><strong>Admin:</strong> ${userText}</span>`;
-                
-                // Formulate smart dynamic peer feedback based on staged assets
-                setTimeout(() => {
-                    if (loadedAssets.length === 0) {
-                        log.innerHTML += `<br><br><strong>Gemini Core:</strong> I see your design prompt. To render this in real-time, drag your raw video or image assets directly into the <strong>User Asset Vault</strong> so I can read the source pixels.`;
-                    } else {
-                        log.innerHTML += `<br><br><strong>Gemini Core:</strong> Staged files detected (${loadedAssets.join(', ')}). Initializing custom layout synthesis. Confirm execution to deploy changes to the OmniVision viewport.`;
-                    }
-                    log.scrollTop = log.scrollHeight;
-                }, 800);
-
-                input.value = "";
-                log.scrollTop = log.scrollHeight;
-            }
-        }
-    </script>
-
-</body>
-</html>
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 20px;
-            font-size: 13px;
-            color: #64748b;
-            transition: all 0.3s ease;
-        }
-        .vault-zone.dragover {
-            background: rgba(56, 189, 248, 0.1);
-            border-color: #38bdf8;
-            color: #f8fafc;
-        }
-        .file-list {
-            margin-top: 10px;
-            font-size: 12px;
-            color: #4ade80;
-            text-align: left;
-            width: 100%;
-            max-height: 150px;
-            overflow-y: auto;
-        }
-
-        /* Main Viewport - OmniVision Suite */
-        .main-content {
-            display: grid;
-            grid-template-rows: 1fr 220px;
-            gap: 20px;
-        }
-        .canvas-container {
-            background: rgba(30, 41, 59, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            position: relative;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-        }
-        .sphere-axis {
-            width: 250px;
-            height: 250px;
-            border-radius: 50%;
-            background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.2), rgba(0,0,0,0.6)), linear-gradient(45deg, #0284c7, #ec4899);
-            box-shadow: 0 0 40px rgba(2, 132, 199, 0.4);
-            animation: spin 8s linear infinite;
-        }
-
-        /* AI Live Peer Chat Box */
-        .ai-chat-peer {
-            background: rgba(30, 41, 59, 0.5);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            padding: 15px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        .chat-log { flex-grow: 1; background: #0f172a; border-radius: 6px; padding: 10px; font-size: 13px; color: #cbd5e1; overflow-y: auto; }
-        .input-row { display: flex; gap: 10px; }
-        .input-row input { flex-grow: 1; background: #0f172a; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; padding: 10px; color: white; }
-        .btn-send { background: #0284c7; border: none; padding: 0 20px; border-radius: 6px; color: white; font-weight: 600; cursor: pointer; }
-        @keyframes spin { 100% { transform: rotate(360deg); } }
-    </style>
-</head>
-<body>
-
-    <div class="sidebar">
-        <div class="panel-title">🛡️ User Asset Vault</div>
-        <div class="vault-zone" id="dropZone">
-            <span id="vaultPrompt">Drop media files here to ground the Gemini Engine.<br><br>(Videos, Audio, or Photos)</span>
-            <div class="file-list" id="fileList"></div>
+    <div class="canvas-container">
+        <div class="sphere-axis"></div>
+        <div style="position: absolute; bottom: 10px; left: 10px; font-size: 10px; color: #94a3b8; background: rgba(0,0,0,0.6); padding: 3px 8px; border-radius: 4px;">
+            OmniVision Engine Active
         </div>
-        <div class="panel-title">💰 Admin Ledger</div>
-        <div style="font-size: 20px; font-weight: bold; color: #4ade80;">$0.00 USD</div>
-        <div style="font-size: 11px; color: #94a3b8;">50/50 Liquidation Split Active</div>
     </div>
 
-    <div class="main-content">
-        <div class="canvas-container">
-            <div class="sphere-axis"></div>
-            <div style="position: absolute; bottom: 20px; left: 20px; font-size: 12px; color: #94a3b8; background: rgba(0,0,0,0.5); padding: 5px 10px; border-radius: 4px;">
-                OmniVision Real-Time Engine Active
-            </div>
+    <div class="ai-chat-peer">
+        <div class="panel-title">🗣️ Gemini AI Advisor</div>
+        <div class="chat-log" id="chatLog">
+            <strong>Gemini Core:</strong> Session validated under Tier 0 Admin Rights. Your mobile workspace is initialized. Staged files will act as system context.
         </div>
-
-        <div class="ai-chat-peer">
-            <div class="panel-title">🗣️ Gemini AI Chat Advisor (Discussion Mode)</div>
-            <div class="chat-log" id="chatLog">
-                <strong>Gemini Core:</strong> Session validated under Tier 0 Admin Rights. Your workspace is grounded by your files. Speak what you imagine into existence below...
-            </div>
-            <div class="input-row">
-                <input type="text" id="userInput" placeholder="Describe the video edit or 3D graphic layout you want to render...">
-                <button class="btn-send" onclick="sendMessage()">Send</button>
-            </div>
+        <div class="input-row">
+            <input type="text" id="userInput" placeholder="Describe the edit you want to render...">
+            <button class="btn-send" onclick="sendMessage()">Send</button>
         </div>
     </div>
 
     <script>
-        // Store uploaded assets in application memory
         let loadedAssets = [];
-
         const dropZone = document.getElementById('dropZone');
+        const fileSelector = document.getElementById('fileSelector');
         const fileList = document.getElementById('fileList');
-        const vaultPrompt = document.getElementById('vaultPrompt');
         const log = document.getElementById('chatLog');
 
-        // Drag and Drop Event Logic
-        ['dragenter', 'dragover'].forEach(eventName => {
-            dropZone.addEventListener(eventName, (e) => {
-                e.preventDefault();
-                dropZone.classList.add('dragover');
-            }, false);
+        // Handle file selection from phone storage browse click
+        fileSelector.addEventListener('change', (e) => {
+            handleFiles(e.target.files);
         });
 
-        ['dragleave', 'drop'].forEach(eventName => {
-            dropZone.addEventListener(eventName, (e) => {
-                e.preventDefault();
-                dropZone.classList.remove('dragover');
-            }, false);
-        });
-
-        dropZone.addEventListener('drop', (e) => {
-            const dt = e.dataTransfer;
-            const files = dt.files;
-
+        function handleFiles(files) {
             for (let i = 0; i < files.length; i++) {
                 loadedAssets.push(files[i].name);
                 fileList.innerHTML += `<div>📄 ${files[i].name} (Staged)</div>`;
             }
-            vaultPrompt.innerHTML = `<strong>Assets Locked in Vault:</strong>`;
-            
-            log.innerHTML += `<br><br><span style="color: #4ade80;"><strong>System Guard:</strong> ${files.length} file(s) safely isolated into asset memory. Gemini AI Engine context updated.</span>`;
+            log.innerHTML += `<br><br><span style="color: #4ade80;"><strong>System Guard:</strong> ${files.length} asset(s) staged on mobile interface memory.</span>`;
             log.scrollTop = log.scrollHeight;
-        });
+        }
 
-        // Dynamic Chat System Logic
         function sendMessage() {
             const input = document.getElementById('userInput');
             if(input.value.trim() !== "") {
-                const userText = input.value;
-                log.innerHTML += `<br><br><span style="color: #38bdf8;"><strong>Admin:</strong> ${userText}</span>`;
-                
-                // Formulate smart dynamic peer feedback based on staged assets
+                log.innerHTML += `<br><br><span style="color: #38bdf8;"><strong>Admin:</strong> ${input.value}</span>`;
                 setTimeout(() => {
                     if (loadedAssets.length === 0) {
-                        log.innerHTML += `<br><br><strong>Gemini Core:</strong> I see your design prompt. To render this in real-time, drag your raw video or image assets directly into the <strong>User Asset Vault</strong> so I can read the source pixels.`;
+                        log.innerHTML += `<br><br><strong>Gemini Core:</strong> Staging prompt received. Tap 'Browse Files' inside the Vault to link media assets for synthesis.`;
                     } else {
-                        log.innerHTML += `<br><br><strong>Gemini Core:</strong> Staged files detected (${loadedAssets.join(', ')}). Initializing custom layout synthesis. Confirm execution to deploy changes to the OmniVision viewport.`;
+                        log.innerHTML += `<br><br><strong>Gemini Core:</strong> Processing assets (${loadedAssets.length} loaded) matching layout request. Ready to push to serverless API pipeline.`;
                     }
                     log.scrollTop = log.scrollHeight;
                 }, 800);
-
                 input.value = "";
                 log.scrollTop = log.scrollHeight;
             }
