@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NexGem Create - Workspace</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: #0f172a;
+            color: #f8fafc;
+            margin: 0;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 20px;
+            height: calc(100vh - 40px);
+        }
+        /* Sidebar Panel - NexGem Guard & Vault */
+        .sidebar {
+            background: rgba(30, 41, 59, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .panel-title { font-size: 16px; font-weight: 600; color: #38bdf8; text-transform: uppercase; letter-spacing: 0.05em; }
+        .vault-zone {
+            flex-grow: 1;
+            background: #0f172a;
+            border: 2px dashed rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+            font-size: 13px;
+            color: #64748b;
+        }
+        /* Main Viewport - OmniVision Suite */
+        .main-content {
+            display: grid;
+            grid-template-rows: 1fr 200px;
+            gap: 20px;
+        }
+        .canvas-container {
+            background: rgba(30, 41, 59, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+        .sphere-axis {
+            width: 250px;
+            height: 250px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.2), rgba(0,0,0,0.6)), linear-gradient(45deg, #0284c7, #ec4899);
+            box-shadow: 0 0 40px rgba(2, 132, 199, 0.4);
+            animation: spin 8s linear infinite;
+        }
+        /* AI Live Peer Chat Box */
+        .ai-chat-peer {
+            background: rgba(30, 41, 59, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .chat-log { flex-grow: 1; background: #0f172a; border-radius: 6px; padding: 10px; font-size: 13px; color: #cbd5e1; overflow-y: auto; }
+        .input-row { display: flex; gap: 10px; }
+        .input-row input { flex-grow: 1; background: #0f172a; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; padding: 10px; color: white; }
+        .btn-send { background: #0284c7; border: none; padding: 0 20px; border-radius: 6px; color: white; font-weight: 600; cursor: pointer; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <div class="panel-title">🛡️ User Asset Vault</div>
+        <div class="vault-zone">
+            Drop files here to ground the Gemini AI Core Engine.<br><br>(Supports Videos, Audio, and Photos)
+        </div>
+        <div class="panel-title">💰 Admin Ledger</div>
+        <div style="font-size: 20px; font-weight: bold; color: #4ade80;">$0.00 USD</div>
+        <div style="font-size: 11px; color: #94a3b8;">50/50 Liquidation Split Active</div>
+    </div>
+
+    <div class="main-content">
+        <div class="canvas-container">
+            <div class="sphere-axis"></div>
+            <div style="position: absolute; bottom: 20px; left: 20px; font-size: 12px; color: #94a3b8; background: rgba(0,0,0,0.5); padding: 5px 10px; border-radius: 4px;">
+                OmniVision Real-Time Engine Active
+            </div>
+        </div>
+
+        <div class="ai-chat-peer">
+            <div class="panel-title">🗣️ Gemini AI Chat Advisor (Discussion Mode)</div>
+            <div class="chat-log" id="chatLog">
+                <strong>Gemini Core:</strong> Session validated under Tier 0 Admin Rights. Your workspace is grounded by your files. Speak what you imagine into existence below...
+            </div>
+            <div class="input-row">
+                <input type="text" id="userInput" placeholder="Describe the video edit or 3D graphic layout you want to render...">
+                <button class="btn-send" onclick="sendMessage()">Send</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function sendMessage() {
+            const input = document.getElementById('userInput');
+            const log = document.getElementById('chatLog');
+            if(input.value.trim() !== "") {
+                log.innerHTML += `<br><br><span style="color: #38bdf8;"><strong>Admin:</strong> ${input.value}</span>`;
+                log.innerHTML += `<br><br><strong>Gemini Core:</strong> Processing request via standard single-pipeline axis. Ready to render changes on confirmation command.`;
+                input.value = "";
+                log.scrollTop = log.scrollHeight;
+            }
+        }
+    </script>
+
+</body>
+</html>
