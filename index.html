@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project NexGem Create - Gateway</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            color: #f8fafc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+        .gateway-card {
+            background: rgba(30, 41, 59, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(12px);
+            padding: 30px;
+            border-radius: 16px;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+        h1 { font-size: 24px; margin-bottom: 5px; color: #38bdf8; text-align: center; }
+        .subtitle { font-size: 14px; color: #94a3b8; text-align: center; margin-bottom: 25px; }
+        .tier-selection { margin-bottom: 20px; }
+        .tier-label { display: block; margin-bottom: 10px; font-weight: 600; font-size: 14px; }
+        .radio-group { display: flex; gap: 15px; }
+        .radio-option {
+            flex: 1;
+            background: rgba(15, 23, 42, 0.6);
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.05);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+        }
+        .scroll-box {
+            background: #0f172a;
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 8px;
+            height: 180px;
+            overflow-y: scroll;
+            font-size: 12px;
+            line-height: 1.6;
+            color: #cbd5e1;
+            margin-bottom: 20px;
+        }
+        .scroll-box h3 { color: #f8fafc; margin-top: 0; font-size: 14px; }
+        .consent-check {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+            margin-bottom: 25px;
+            color: #cbd5e1;
+        }
+        .btn-submit {
+            width: 100%;
+            padding: 14px;
+            background: #0284c7;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-submit:disabled {
+            background: #334155;
+            color: #64748b;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+
+<div class="gateway-card">
+    <h1>Project NexGem Create</h1>
+    <div class="subtitle">by Rubyann Felicia Benavidez | Nexus NexGen OmniVision Suite</div>
+
+    <div class="tier-selection">
+        <span class="tier-label">Select Privacy Tier:</span>
+        <div class="radio-group">
+            <label class="radio-option">
+                <input type="radio" name="privacyTier" value="public" checked>
+                <span>🌐 Public Creator Mode</span>
+            </label>
+            <label class="radio-option">
+                <input type="radio" name="privacyTier" value="private">
+                <span>🔒 Private Personal Mode</span>
+            </label>
+        </div>
+    </div>
+
+    <div class="scroll-box">
+        <h3>Terms of Service & Privacy Agreement</h3>
+        <p>Welcome to Project NexGem Create, a Nexus NexGen OmniVision Application. By signing into this application, you explicitly agree to the following terms, conditions, and data handling policies for this active session:</p>
+        <p><strong>1. Privacy Tiers & Data Custody:</strong> Private Personal Mode isolates your assets inside your secure file repository away from public pipelines. Public Creator Mode grants platform operational rights to format and syndicate selected items directly to your third-party socials.</p>
+        <p><strong>2. Monetary Architecture:</strong> Premium generative pipelines (Gemini Core) operate under a 50/50 programmatic allocation layout to maintain hosting, databases, and operational scaling. International assets clear through a live liquidation conversion gate directly into USD values.</p>
+        <p><strong>3. AI Grounding & Safety Monitoring:</strong> Voice-to-Existence pipelines are strictly structurally constrained to generate original content based on user-supplied parameters to avoid cross-contamination. To ensure total platform integrity, all assets remain subject to automated backend system safeguards and Admin oversight.</p>
+    </div>
+
+    <div class="consent-check">
+        <input type="checkbox" id="consentCheckbox" onchange="toggleButton()">
+        <label for="consentCheckbox">I agree to the Terms, Conditions, and Privacy Policies stated above for this session. 💙</label>
+    </div>
+
+    <button id="startedBtn" class="btn-submit" disabled onclick="alert('Session initialized under Tier 0 Admin Rules.')">Get Started</button>
+</div>
+
+<script>
+    function toggleButton() {
+        const checkbox = document.getElementById('consentCheckbox');
+        const button = document.getElementById('startedBtn');
+        button.disabled = !checkbox.checked;
+    }
+</script>
+
+</body>
+</html>
