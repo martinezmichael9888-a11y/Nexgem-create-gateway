@@ -11,20 +11,23 @@ export default async function handler(req, res) {
             return res.status(500).json({ error: 'API Key missing.' });
         }
 
-        // Directing Gemini to act strictly as a 3D Three.js code generator
-        const systemInstruction = `
-You are a 3D graphics engine code generator. 
-Your job is to output ONLY raw, valid JavaScript code using Three.js. 
-Do not wrap the code in markdown code blocks (\`\`\`js). 
-CRITICAL REQUIREMENT: Do NOT create a new canvas element. You MUST get the existing canvas from the page using:
+    // Directing Gemini to act strictly as a 3D Three.js code generator
+    const contextPrompt = `
+System Role: You are a Three.js 3D engine compiler.
+Task: Generate valid JavaScript code using Three.js to render what the user requests.
+CRITICAL REQUIREMENT: Do NOT create a new canvas element. You MUST grab the existing canvas from the page using:
 const canvas = document.getElementById('three-canvas');
-Then, you MUST pass this canvas to the WebGLRenderer like this:
+Then, you MUST pass this canvas directly to the WebGLRenderer like this:
 const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
-Make sure to set the renderer size using the canvas clientWidth and clientHeight, set up a perspective camera, add lights, create the requested 3D object, and include a requestAnimationFrame animation loop to make it spin.
-`;
 
-        User Request: ${prompt}
-        `;
+Rules: 
+- Return ONLY raw JavaScript code inside the response. 
+- Do NOT wrap it in markdown code blocks. 
+- Do not include explanations or text outside the code.
+- Ensure lighting, camera, an animation loop, and proper resizing based on the canvas dimensions are included.
+
+User Request: ${prompt}
+`;
 
         const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${apiKey}`, {
             method: 'POST',
