@@ -156,11 +156,12 @@
         body: JSON.stringify({ prompt: promptText })
     })
     .then(res => res.json())
-    .then(data => {
-        // 4. Inject the fresh 3D Three.js script straight into the page context
-        const scriptElement = document.createElement('script');
-        scriptElement.text = data.code;
-        document.body.appendChild(scriptElement);
+.then(data => {
+    // 4. Directly execute the 3D script sent by the backend
+    if (data.code) {
+        eval(data.code);
+    }
+
         
         log.innerHTML += `<br><br><strong>Gemini Core:</strong> Workspace compilation successful. 3D engine updated.`;
         log.scrollTop = log.scrollHeight;
