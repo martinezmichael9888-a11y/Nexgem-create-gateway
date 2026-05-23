@@ -27,23 +27,42 @@
             gap: 20px;
         }
         .panel-title { font-size: 16px; font-weight: 600; color: #38bdf8; text-transform: uppercase; letter-spacing: 0.05em; }
+        
+        /* Interactive Drag & Drop Vault Zone */
         .vault-zone {
             flex-grow: 1;
             background: #0f172a;
-            border: 2px dashed rgba(255, 255, 255, 0.1);
+            border: 2px dashed rgba(56, 189, 248, 0.3);
             border-radius: 8px;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             text-align: center;
             padding: 20px;
             font-size: 13px;
             color: #64748b;
+            transition: all 0.3s ease;
         }
+        .vault-zone.dragover {
+            background: rgba(56, 189, 248, 0.1);
+            border-color: #38bdf8;
+            color: #f8fafc;
+        }
+        .file-list {
+            margin-top: 10px;
+            font-size: 12px;
+            color: #4ade80;
+            text-align: left;
+            width: 100%;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+
         /* Main Viewport - OmniVision Suite */
         .main-content {
             display: grid;
-            grid-template-rows: 1fr 200px;
+            grid-template-rows: 1fr 220px;
             gap: 20px;
         }
         .canvas-container {
@@ -64,6 +83,7 @@
             box-shadow: 0 0 40px rgba(2, 132, 199, 0.4);
             animation: spin 8s linear infinite;
         }
+
         /* AI Live Peer Chat Box */
         .ai-chat-peer {
             background: rgba(30, 41, 59, 0.5);
@@ -85,8 +105,9 @@
 
     <div class="sidebar">
         <div class="panel-title">🛡️ User Asset Vault</div>
-        <div class="vault-zone">
-            Drop files here to ground the Gemini AI Core Engine.<br><br>(Supports Videos, Audio, and Photos)
+        <div class="vault-zone" id="dropZone">
+            <span id="vaultPrompt">Drop media files here to ground the Gemini Engine.<br><br>(Videos, Audio, or Photos)</span>
+            <div class="file-list" id="fileList"></div>
         </div>
         <div class="panel-title">💰 Admin Ledger</div>
         <div style="font-size: 20px; font-weight: bold; color: #4ade80;">$0.00 USD</div>
@@ -114,12 +135,60 @@
     </div>
 
     <script>
+        // Store uploaded assets in application memory
+        let loadedAssets = [];
+
+        const dropZone = document.getElementById('dropZone');
+        const fileList = document.getElementById('fileList');
+        const vaultPrompt = document.getElementById('vaultPrompt');
+        const log = document.getElementById('chatLog');
+
+        // Drag and Drop Event Logic
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropZone.addEventListener(eventName, (e) => {
+                e.preventDefault();
+                dropZone.classList.add('dragover');
+            }, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, (e) => {
+                e.preventDefault();
+                dropZone.classList.remove('dragover');
+            }, false);
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+
+            for (let i = 0; i < files.length; i++) {
+                loadedAssets.push(files[i].name);
+                fileList.innerHTML += `<div>📄 ${files[i].name} (Staged)</div>`;
+            }
+            vaultPrompt.innerHTML = `<strong>Assets Locked in Vault:</strong>`;
+            
+            log.innerHTML += `<br><br><span style="color: #4ade80;"><strong>System Guard:</strong> ${files.length} file(s) safely isolated into asset memory. Gemini AI Engine context updated.</span>`;
+            log.scrollTop = log.scrollHeight;
+        });
+
+        // Dynamic Chat System Logic
         function sendMessage() {
             const input = document.getElementById('userInput');
-            const log = document.getElementById('chatLog');
             if(input.value.trim() !== "") {
-                log.innerHTML += `<br><br><span style="color: #38bdf8;"><strong>Admin:</strong> ${input.value}</span>`;
-                log.innerHTML += `<br><br><strong>Gemini Core:</strong> Processing request via standard single-pipeline axis. Ready to render changes on confirmation command.`;
+                const userText = input.value;
+                log.innerHTML += `<br><br><span style="color: #38bdf8;"><strong>Admin:</strong> ${userText}</span>`;
+                
+                // Formulate smart dynamic peer feedback based on staged assets
+                setTimeout(() => {
+                    if (loadedAssets.length === 0) {
+                        log.innerHTML += `<br><br><strong>Gemini Core:</strong> I see your design prompt. To render this in real-time, drag your raw video or image assets directly into the <strong>User Asset Vault</strong> so I can read the source pixels.`;
+                    } else {
+                        log.innerHTML += `<br><br><strong>Gemini Core:</strong> Staged files detected (${loadedAssets.join(', ')}). Initializing custom layout synthesis. Confirm execution to deploy changes to the OmniVision viewport.`;
+                    }
+                    log.scrollTop = log.scrollHeight;
+                }, 800);
+
                 input.value = "";
                 log.scrollTop = log.scrollHeight;
             }
