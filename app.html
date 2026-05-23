@@ -156,11 +156,19 @@
         body: JSON.stringify({ prompt: promptText })
     })
     .then(res => res.json())
-.then(data => {
-    // 4. Directly execute the 3D script sent by the backend
-    if (data.code) {
-        eval(data.code);
-    }
+        .then(data => {
+            // 4. Directly execute the 3D script sent by the backend
+            if (data.code) {
+                // Remove any old dynamic scripts to keep memory clean
+                const oldScript = document.getElementById('dynamic-3d-script');
+                if (oldScript) oldScript.remove();
+
+                const scriptElement = document.createElement('script');
+                scriptElement.id = 'dynamic-3d-script';
+                scriptElement.text = data.code;
+                document.body.appendChild(scriptElement);
+            }
+
 
         
         log.innerHTML += `<br><br><strong>Gemini Core:</strong> Workspace compilation successful. 3D engine updated.`;
