@@ -1,8 +1,13 @@
 {
-  "version": 2,
   "cleanUrls": true,
-  "routes": [
-    { "src": "/app", "dest": "/app.html" },
-    { "src": "/(.*)", "dest": "/index.html" }
+  "rewrites": [
+    {
+      "source": "/",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/app",
+      "destination": "/app.html"
+    }
   ]
 }
