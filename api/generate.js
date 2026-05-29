@@ -19,7 +19,7 @@ CRITICAL REQUIREMENT: Do NOT create a new canvas element. You MUST grab the exis
 const canvas = document.getElementById('three-canvas');
 Then, you MUST pass this canvas directly to the WebGLRenderer like this:
 const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
-
+const systemInstruction = "You are an AI assistant that generates Three.js scenes. CRITICAL: Return ONLY raw, valid Three.js JavaScript code that can be executed directly inside a new function constructor. Do NOT wrap the code in markdown block format like '''jacascript''', and do NOT include any conversational text, explanations, or greetings. Start directly with the code setup.";
 Rules: 
 - Return ONLY raw JavaScript code inside the response. 
 - Do NOT wrap it in markdown code blocks. 
